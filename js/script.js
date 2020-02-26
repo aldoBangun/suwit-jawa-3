@@ -8,6 +8,7 @@ start.addEventListener('click',function(){
     const pScore = document.querySelector('.player-score h1');
     const cScore = document.querySelector('.com-score h1');
     const round = document.getElementsByClassName('round')[0];
+    const imgCom = document.querySelector('.com-side img');
     pScore.innerHTML = '0';
     cScore.innerHTML = '0';
     round.innerHTML = 'Round 1';
@@ -26,6 +27,23 @@ start.addEventListener('click',function(){
         return (player == 'gajah') ? 'kalah' : 'menang';
     }
 
+    const mixImgCom = function(){
+        const option = ['gajah','orang','semut'];
+        let i=0;
+        const mixTime = new Date().getTime();
+        setInterval(function(){
+            if(new Date().getTime() - mixTime > 1500){
+                clearInterval;
+                return;
+            }
+            imgCom.setAttribute('src',`img/${option[i]}.png`);
+            i++;
+            if(i==option.length){
+                i = 0;
+            }
+        }, 100);
+    }
+
     const player = document.querySelectorAll('.player-side li img');
     let scoreCom = 0;
     let scorePlayer = 0;
@@ -40,37 +58,40 @@ start.addEventListener('click',function(){
             const imgCom = document.querySelector('.com-side img');
             const com = getCom();
             const player = play.className;
-            imgCom.setAttribute('src',`img/${com}.png`);
-            const res = getResult(com,player);
-            if(res == 'menang') {
-                scorePlayer += 3;
-                scoreCom += 0;
-                result.style.backgroundColor = '#9f9';
-            } else if ( res == 'kalah') {
-                scorePlayer += 0;
-                scoreCom += 3;
-                result.style.backgroundColor = '#f99';
-            } else {
-                scorePlayer +=1;
-                scoreCom +=1;
-                result.style.backgroundColor = '#99f';
-            }
-            rnd++;
-            if(rnd>10){
-                round.innerHTML = 'final score';
-                setTimeout(function(){
-                    field.remove();
-                },500);
-            } else {
-                setTimeout(function(){
-                    round.innerHTML = 'round ' + rnd;
-                },1000);
-            }
-            result.innerHTML = res + '!';
+            mixImgCom();
             setTimeout(function(){
-                pScore.innerHTML = scorePlayer;
-                cScore.innerHTML = scoreCom;
-            },500);
+                imgCom.setAttribute('src',`img/${com}.png`);
+                const res = getResult(com,player);
+                if(res == 'menang') {
+                    scorePlayer += 3;
+                    scoreCom += 0;
+                    result.style.backgroundColor = '#9f9';
+                } else if ( res == 'kalah') {
+                    scorePlayer += 0;
+                    scoreCom += 3;
+                    result.style.backgroundColor = '#f99';
+                } else {
+                    scorePlayer +=1;
+                    scoreCom +=1;
+                    result.style.backgroundColor = '#99f';
+                }
+                rnd++;
+                if(rnd>10){
+                    round.innerHTML = 'final score';
+                    setTimeout(function(){
+                        field.remove();
+                    },500);
+                } else {
+                    setTimeout(function(){
+                        round.innerHTML = 'round ' + rnd;
+                    },1000);
+                }
+                result.innerHTML = res + '!';
+                setTimeout(function(){
+                    pScore.innerHTML = scorePlayer;
+                    cScore.innerHTML = scoreCom;
+                },500);
+            },1500);
         });
     });
 });
